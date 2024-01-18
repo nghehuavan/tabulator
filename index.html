@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+</head>
+
+<body>
+  <h1> 1 custom colums (2 sort) by 2 hidden column</h1>
+
+  <div id="example-table"></div>
+  <button type="button" onclick="showAllColumns();">show 2 hidden column</button>
+  <script>
+    var tabledata = [
+      { id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1 },
+      { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true },
+      { id: 3, name: "Christine Lobowski", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true" },
+      { id: 4, name: "Brendon Philips", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980" },
+      { id: 5, name: "Margret Marmajuke", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999" },
+      { id: 6, name: "Frank Harbours", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1 },
+    ];
+
+    var table = new Tabulator("#example-table", {
+      data: tabledata,
+      height: "311px",
+      columns: [
+        { title: "Name", field: "name", visible: false },
+        { title: "Gender", field: "gender", visible: false },
+        {
+          title: "Name_Gender",
+          titleFormatter: function (cell, formatterParams, onRendered) {
+            return `<a href="#" onclick="sortBy('name');return false;">Name (click sort)</a><br/><a href="#" onclick="sortBy('gender');return false;">Gender (click sort)</a>`;
+          },
+          field: "__FullName",
+          hozAlign: "center",
+          headerSort: false,
+          mutator: function (value, data, type, params, component) {
+            return `${data.name} (${data.gender}) `;
+          }
+        },
+
+        { title: "Progress", field: "progress", sorter: "number" },
+        { title: "Rating", field: "rating" },
+        { title: "Favourite Color", field: "col" },
+        { title: "Date Of Birth", field: "dob", hozAlign: "center" },
+
+      ],
+    });
+
+    function sortBy(field) {
+      var currentSorts = table.getSorters();
+      console.log(currentSorts);
+      var currentSort = currentSorts.find((s) => s.field == field);
+      if (currentSort) {
+        var dir = currentSort.dir == "asc" ? "desc" : "asc"
+        table.setSort(field, dir);
+      } else {
+        table.setSort(field, "desc");
+      }
+    }
+
+    function showAllColumns() {
+      table.getColumns().forEach(function (column) {
+        column.show(); // shows the column
+      });
+
+    }
+  </script>
+</body>
+
+</html>
