@@ -11,6 +11,11 @@
   <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"></script>
+  <style>
+    .changed {
+      background-color: rgb(250, 255, 237);
+    }
+  </style>
 </head>
 
 <body>
@@ -21,36 +26,50 @@
   <script>
     var tabledata = [
       { id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1, money: 10000000, check: false, type: '' },
-      { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true, money: 10000000, check: true, type: '1' },
-      { id: 3, name: "Christin", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true", money: 10000000, check: false, type: '2' },
-      { id: 4, name: "Brendon", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980", money: 10000000, check: false, type: '' },
-      { id: 5, name: "Margret", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999", money: 10000000, check: false, type: '' },
-      { id: 6, name: "Frank ", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1, money: 10000000, check: false, type: '' },
+      { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true, money: 11000000, check: true, type: '1' },
+      { id: 3, name: "Christin", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true", money: 12000000, check: false, type: '2' },
+      { id: 4, name: "Brendon", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980", money: 12000000, check: false, type: '' },
+      { id: 5, name: "Margret", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999", money: 14000000, check: false, type: '' },
+      { id: 6, name: "Frank ", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1, money: 15000000, check: false, type: '' },
     ];
+    // clone and keep original array
+    var original = tabledata.map(item => Object.assign({}, item));
 
     // create custom formatter
     var moneyFormater = function (cell, formatterParams) {
-      console.log(cell.getData());
-      var formatter = document.createElement("input");
-      formatter.setAttribute("type", "text");
-      formatter.value = numberWithDots(cell.getValue());
-      formatter.addEventListener("focus", () => {
-        formatter.value = removeDots(formatter.value);
+      var formater = document.createElement("input");
+      formater.setAttribute("type", "text");
+      formater.value = numberWithDots(cell.getValue());
+      formater.addEventListener("focus", () => {
+        formater.value = removeDots(formater.value);
       });
 
       successFunc = () => {
         var oldValue = cell.getValue();
-        var newValue = removeDots(formatter.value);
-        if (newValue != oldValue) {
+        var newValue = removeDots(formater.value);
+        if (newValue != oldValue && isMoney(newValue)) {
           cell.setValue(newValue);
           console.log(tabledata)
+          formater.value = numberWithDots(cell.getValue());
         }
-        formatter.value = numberWithDots(cell.getValue());
       }
-      formatter.addEventListener("change", successFunc);
-      formatter.addEventListener("blur", successFunc);
+      formater.addEventListener("change", successFunc);
+      formater.addEventListener("blur", successFunc);
 
-      return formatter;
+      // detect changed value
+      var index = cell.getRow().getIndex() - 1;
+      var oVal = original[index].money;
+      var cVal = tabledata[index].money;
+      if (oVal != cVal) {
+        formater.setAttribute("class", "changed");
+      }
+
+      return formater;
+    }
+
+    function isMoney(x) {
+      var val = removeDots(x);
+      return !isNaN(val) && parseInt(val) >= 0;
     }
 
     // create custom formatter
@@ -67,11 +86,10 @@
     }
 
     var radioFormater = function (cell, formatterParams) {
-      var row = cell.getRow();
-      var data = row.getData();
+      var data = cell.getData();
       var formatter = document.createElement("input");
       formatter.setAttribute("type", "radio");
-      formatter.setAttribute("name", `radio_${formatterParams.radioName}_${row.getIndex()}`);
+      formatter.setAttribute("name", `radio_${formatterParams.radioName}_${cell.getRow().getIndex()}`);
       formatter.checked = data.type == formatterParams.checkedValue;
       // console.log(data.type)
       successFunc = () => {
@@ -132,7 +150,7 @@
             return `<input id="checkAll" type="checkbox" onchange="toggleCheckAll();return false;">`;
           },
           headerSort: false,
-          field: "check", hozAlign: "center", sort: false,
+          field: "check", hozAlign: "center",
           formatter: checkFormater,
         },
         { title: "Type1", field: "type", hozAlign: "center", headerSort: false, formatter: radioFormater, formatterParams: { radioName: "type", checkedValue: "1" }, },
