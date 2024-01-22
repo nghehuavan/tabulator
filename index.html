@@ -50,8 +50,8 @@
         if (newValue != oldValue && isMoney(newValue)) {
           cell.setValue(newValue);
           console.log(tabledata)
-          formater.value = numberWithDots(cell.getValue());
         }
+        formater.value = numberWithDots(cell.getValue());
       }
       formater.addEventListener("change", successFunc);
       formater.addEventListener("blur", successFunc);
