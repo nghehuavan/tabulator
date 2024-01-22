@@ -73,18 +73,34 @@
       formatter.setAttribute("type", "radio");
       formatter.setAttribute("name", `radio_${formatterParams.radioName}_${row.getIndex()}`);
       formatter.checked = data.type == formatterParams.checkedValue;
+      // console.log(data.type)
       successFunc = () => {
         data.type = formatterParams.checkedValue
-        // cell.setValue(formatter.checked);
         console.log(tabledata)
       }
       formatter.addEventListener("change", successFunc);
       return formatter;
     }
 
+    var resetFormater = function (cell, formatterParams) {
+      var row = cell.getRow();
+      var data = row.getData();
+      var formatter = document.createElement("input");
+      formatter.setAttribute("type", "button");
+      formatter.setAttribute("value", "reset");
+      successFunc = () => {
+        data.type = ""
+        data.check = false
+        table.replaceData(tabledata)
+        console.log(tabledata)
+      }
+      formatter.addEventListener("click", successFunc);
+      return formatter;
+    }
+
     var table = new Tabulator("#example-table", {
       data: tabledata,
-      reactiveData:true,
+      // reactiveData: true,
       height: "311px",
       columns: [
         { title: "Name", field: "name", visible: false },
@@ -119,21 +135,10 @@
           field: "check", hozAlign: "center", sort: false,
           formatter: checkFormater,
         },
-        { title: "Type1", field: "type", hozAlign: "center", formatter: radioFormater, formatterParams: { radioName: "type", checkedValue: "1" }, },
-        { title: "Type2", field: "type", hozAlign: "center", formatter: radioFormater, formatterParams: { radioName: "type", checkedValue: "2" }, },
+        { title: "Type1", field: "type", hozAlign: "center", headerSort: false, formatter: radioFormater, formatterParams: { radioName: "type", checkedValue: "1" }, },
+        { title: "Type2", field: "type", hozAlign: "center", headerSort: false, formatter: radioFormater, formatterParams: { radioName: "type", checkedValue: "2" }, },
         {
-          title: "", field: "type", hozAlign: "center", formatter: function (cell, formatterParams) {
-            var formatter = document.createElement("input");
-            formatter.setAttribute("type", "button");
-            formatter.setAttribute("value", "reset");
-            successFunc = () => {
-              data.type = ""
-              table.replaceData(tabledata)
-              console.log(tabledata)
-            }
-            formatter.addEventListener("click", successFunc);
-            return formatter;
-          }
+          title: "", field: "type", hozAlign: "center", formatter: resetFormater,
         },
       ],
     });
@@ -155,6 +160,7 @@
       for (let i = 0; i < tabledata.length; i++) {
         tabledata[i].check = checked;
       }
+      table.replaceData(tabledata);
     }
 
     function showAllColumns() {
