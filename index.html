@@ -32,18 +32,26 @@
       { id: 5, name: "Margret", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999", money: 14000000, check: false, type: '' },
       { id: 6, name: "Frank ", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1, money: 15000000, check: false, type: '' },
     ];
+
     // clone and keep original array
     var original = tabledata.map(item => Object.assign({}, item));
 
-    // create custom formatter
+    // custom money formatter
     var moneyFormater = function (cell, formatterParams) {
       var formater = document.createElement("input");
       formater.setAttribute("type", "text");
       formater.value = numberWithDots(cell.getValue());
+
+      // remove dots on focus
       formater.addEventListener("focus", () => {
         formater.value = removeDots(formater.value);
       });
+      // allow only number
+      formater.addEventListener("input", () => {
+        formater.value = formater.value.replace(/\D/g, '');
+      });
 
+      // update new value
       successFunc = () => {
         var oldValue = cell.getValue();
         var newValue = removeDots(formater.value);
@@ -72,7 +80,7 @@
       return !isNaN(val) && parseInt(val) >= 0;
     }
 
-    // create custom formatter
+    // custom checkbox formatter
     var checkFormater = function (cell, formatterParams) {
       var formatter = document.createElement("input");
       formatter.setAttribute("type", "checkbox");
@@ -85,13 +93,13 @@
       return formatter;
     }
 
+    // custom radio formatter
     var radioFormater = function (cell, formatterParams) {
       var data = cell.getData();
       var formatter = document.createElement("input");
       formatter.setAttribute("type", "radio");
       formatter.setAttribute("name", `radio_${formatterParams.radioName}_${cell.getRow().getIndex()}`);
       formatter.checked = data.type == formatterParams.checkedValue;
-      // console.log(data.type)
       successFunc = () => {
         data.type = formatterParams.checkedValue
         console.log(tabledata)
@@ -100,6 +108,7 @@
       return formatter;
     }
 
+    // custom button formatter change other cell value
     var resetFormater = function (cell, formatterParams) {
       var row = cell.getRow();
       var data = row.getData();
@@ -118,7 +127,6 @@
 
     var table = new Tabulator("#example-table", {
       data: tabledata,
-      // reactiveData: true,
       height: "311px",
       columns: [
         { title: "Name", field: "name", visible: false },
@@ -161,6 +169,7 @@
       ],
     });
 
+    // sort by field
     function sortBy(field) {
       var currentSorts = table.getSorters();
       console.log(currentSorts);
@@ -173,6 +182,7 @@
       }
     }
 
+    // check all check box in column
     function toggleCheckAll() {
       var checked = document.getElementById("checkAll").checked;
       for (let i = 0; i < tabledata.length; i++) {
@@ -181,6 +191,7 @@
       table.replaceData(tabledata);
     }
 
+    // show all hidden columns
     function showAllColumns() {
       table.getColumns().forEach(function (column) {
         column.show(); // shows the column
@@ -188,16 +199,15 @@
 
     }
 
+    // format money with dots
     function numberWithDots(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
+    // remove dots from formated money 
     function removeDots(x) {
       return x.toString().replaceAll(",", "");
     }
-
-
-    console.log(numberWithDots(10000000000))
   </script>
 </body>
 
