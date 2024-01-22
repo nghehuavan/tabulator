@@ -10,6 +10,7 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"></script>
 </head>
 
 <body>
@@ -19,13 +20,51 @@
   <button type="button" onclick="showAllColumns();">show 2 hidden column</button>
   <script>
     var tabledata = [
-      { id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1, money: 10000000 },
-      { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true, money: 10000000 },
-      { id: 3, name: "Christine Lobowski", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true", money: 10000000 },
-      { id: 4, name: "Brendon Philips", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980", money: 10000000 },
-      { id: 5, name: "Margret Marmajuke", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999", money: 10000000 },
-      { id: 6, name: "Frank Harbours", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1, money: 10000000 },
+      { id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1, money: 10000000, check: false },
+      { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true, money: 10000000, check: true },
+      { id: 3, name: "Christine Lobowski", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true", money: 10000000, check: false },
+      { id: 4, name: "Brendon Philips", progress: 100, gender: "male", rating: 1, col: "orange", dob: "01/08/1980", money: 10000000, check: false },
+      { id: 5, name: "Margret Marmajuke", progress: 16, gender: "female", rating: 5, col: "yellow", dob: "31/01/1999", money: 10000000, check: false },
+      { id: 6, name: "Frank Harbours", progress: 38, gender: "male", rating: 4, col: "red", dob: "12/05/1966", car: 1, money: 10000000, check: false },
     ];
+
+    // create custom formatter
+    var moneyFormater = function (cell, formatterParams) {
+      console.log(cell.getData());
+      var formatter = document.createElement("input");
+      formatter.setAttribute("type", "text");
+      formatter.value = numberWithDots(cell.getValue());
+      formatter.addEventListener("focus", () => {
+        formatter.value = removeDots(formatter.value);
+      });
+
+      successFunc = () => {
+        var oldValue = cell.getValue();
+        var newValue = removeDots(formatter.value);
+        if (newValue != oldValue) {
+          cell.setValue(newValue);
+          console.log(tabledata)
+        }
+        formatter.value = numberWithDots(cell.getValue());
+      }
+      formatter.addEventListener("change", successFunc);
+      formatter.addEventListener("blur", successFunc);
+
+      return formatter;
+    }
+
+    // create custom formatter
+    var checkFormater = function (cell, formatterParams) {
+      var formatter = document.createElement("input");
+      formatter.setAttribute("type", "checkbox");
+      formatter.checked = cell.getValue();
+      successFunc = () => {
+        cell.setValue(formatter.checked);
+        console.log(tabledata)
+      }
+      formatter.addEventListener("change", successFunc);
+      return formatter;
+    }
 
     var table = new Tabulator("#example-table", {
       data: tabledata,
@@ -52,9 +91,16 @@
         { title: "Date Of Birth", field: "dob", hozAlign: "center" },
         {
           title: "Money", field: "money", hozAlign: "center",
-          mutator: function (value, data, type, params, component) {
-            return numberWithDots(value);
-          }
+          formatter: moneyFormater,
+        },
+        {
+          title: "Check",
+          titleFormatter: function (cell, formatterParams, onRendered) {
+            return `<input id="checkAll" type="checkbox" onchange="toggleCheckAll();return false;">`;
+          },
+          headerSort: false,
+          field: "check", hozAlign: "center", sort: false,
+          formatter: checkFormater,
         },
       ],
     });
@@ -71,6 +117,14 @@
       }
     }
 
+    function toggleCheckAll() {
+      var checked = document.getElementById("checkAll").checked;
+      for (let i = 0; i < tabledata.length; i++) {
+        tabledata[i].check = checked;
+      }
+      table.replaceData(tabledata)
+    }
+
     function showAllColumns() {
       table.getColumns().forEach(function (column) {
         column.show(); // shows the column
@@ -81,6 +135,11 @@
     function numberWithDots(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
+
+    function removeDots(x) {
+      return x.toString().replaceAll(",", "");
+    }
+
 
     console.log(numberWithDots(10000000000))
   </script>
