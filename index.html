@@ -24,7 +24,7 @@
   <div id="example-table"></div>
   <button type="button" onclick="showAllColumns();">show 2 hidden column</button>
   <script>
-    var tabledata = [
+    var originalData = [
       { id: 1, name: "Oli Bob", progress: 12, gender: "male", rating: 1, col: "red", dob: "19/02/1984", car: 1, money: 10000000, check: false, type: '' },
       { id: 2, name: "Mary May", progress: 1, gender: "female", rating: 2, col: "blue", dob: "14/05/1982", car: true, money: 11000000, check: true, type: '1' },
       { id: 3, name: "Christin", progress: 42, gender: "female", rating: 0, col: "green", dob: "22/05/1982", car: "true", money: 12000000, check: false, type: '2' },
@@ -34,7 +34,7 @@
     ];
 
     // clone and keep original array
-    var original = tabledata.map(item => Object.assign({}, item));
+    var tabuData = originalData.map(item => Object.assign({}, item));
 
     // custom money formatter
     var moneyFormater = function (cell, formatterParams) {
@@ -57,7 +57,7 @@
         var newValue = removeDots(formater.value);
         if (newValue != oldValue && isMoney(newValue)) {
           cell.setValue(newValue);
-          console.log(tabledata)
+          console.log(originalData)
         }
         formater.value = numberWithDots(cell.getValue());
       }
@@ -66,8 +66,8 @@
 
       // detect changed value
       var index = cell.getRow().getIndex() - 1;
-      var oVal = original[index].money;
-      var cVal = tabledata[index].money;
+      var oVal = originalData[index].money;
+      var cVal = tabuData[index].money;
       if (oVal != cVal) {
         formater.setAttribute("class", "changed");
       }
@@ -87,7 +87,7 @@
       formatter.checked = cell.getValue();
       successFunc = () => {
         cell.setValue(formatter.checked);
-        console.log(tabledata)
+        console.log(originalData)
       }
       formatter.addEventListener("change", successFunc);
       return formatter;
@@ -102,7 +102,7 @@
       formatter.checked = data.type == formatterParams.checkedValue;
       successFunc = () => {
         data.type = formatterParams.checkedValue
-        console.log(tabledata)
+        console.log(originalData)
       }
       formatter.addEventListener("change", successFunc);
       return formatter;
@@ -118,15 +118,15 @@
       successFunc = () => {
         data.type = ""
         data.check = false
-        table.replaceData(tabledata)
-        console.log(tabledata)
+        table.replaceData(originalData)
+        console.log(originalData)
       }
       formatter.addEventListener("click", successFunc);
       return formatter;
     }
 
     var table = new Tabulator("#example-table", {
-      data: tabledata,
+      data: originalData,
       height: "311px",
       columns: [
         { title: "Name", field: "name", visible: false },
@@ -185,10 +185,10 @@
     // check all check box in column
     function toggleCheckAll() {
       var checked = document.getElementById("checkAll").checked;
-      for (let i = 0; i < tabledata.length; i++) {
-        tabledata[i].check = checked;
+      for (let i = 0; i < originalData.length; i++) {
+        originalData[i].check = checked;
       }
-      table.replaceData(tabledata);
+      table.replaceData(originalData);
     }
 
     // show all hidden columns
