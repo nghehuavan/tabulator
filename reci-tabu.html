@@ -255,7 +255,7 @@
         var mapType = typeMaps.find((item) => item.asp == controlTag);
         if (mapType) {
           code += `\nvar ${controlName} = new ${mapType.render}(PrefixControl, index, "${controlName}");`;
-          var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl"];
+          var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname"];
           var specials = attrs.filter(item => sepcialAtrr.includes(item.name));
           var normals = attrs.filter(item => !sepcialAtrr.includes(item.name));
 
@@ -353,6 +353,9 @@
         case "errormessage":
           return "ErrorMessage";
 
+        case "groupname":
+          return "GroupName";
+
         default:
           return name;
       }
@@ -362,12 +365,19 @@
       switch (attr) {
         case "controltovalidate":
           return `${value}.ClientID`;
+
         case "clientvalidationfunction":
           return `"${value}"`;
+
         case "imageurl":
           return `"${value}"`;
+
         case "errormessage":
           return `"${value}"`;
+
+        case "groupname":
+          return `"${value}"`;
+          
         default:
           return value;
       }
