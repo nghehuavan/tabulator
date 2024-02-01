@@ -36,6 +36,8 @@
 
     textarea {
       flex-grow: 1;
+      white-space: nowrap;
+      overflow: scroll;
     }
   </style>
 </head>
@@ -45,16 +47,20 @@
   <div class="row">
     <div class="column">
       <h4>Repeater Row</h4>
-      <textarea onchange="convert(this)">
+      <textarea id="input" onchange="convertRow(this)">
         <tr id="rowContractLeft" runat="server">
           <td id="cellObjectName" runat="server">
             <input type="hidden" id="hidContractCondition" runat="server" />
             <asp:literal id="ltrObjectName" runat="server"></asp:literal>
             <asp:literal id="ltrRidgeName" runat="server"></asp:literal>
             <asp:literal id="ltrRoomNumber" runat="server"></asp:literal>
-            <input type="hidden" id="hidClientCode" runat="server" name="hidClientCode" /><input type="hidden" id="hidCompanyCode" runat="server" name="hidCompanyCode" /><input type="hidden" id="hidContractInfoPid" runat="server" name="hidContractInfoPid" /><input type="hidden" runat="server" id="hidContractInsertDate" name="hidContractInsertDate" />
+            <input type="hidden" id="hidClientCode" runat="server" name="hidClientCode" />
+            <input type="hidden" id="hidCompanyCode" runat="server" name="hidCompanyCode" />
+            <input type="hidden" id="hidContractInfoPid" runat="server" name="hidContractInfoPid" />
+            <input type="hidden" runat="server" id="hidContractInsertDate" name="hidContractInsertDate" />
             <input type="hidden" runat="server" id="hidMoneyReceivedNumber" name="hidMoneyReceivedNumber" />
-            <input type="hidden" id="hidObjectCode" runat="server" name="hidObjectCode" /> <input type="hidden" id="hidObjectName" runat="server" name="hidObjectName" />
+            <input type="hidden" id="hidObjectCode" runat="server" name="hidObjectCode" />
+            <input type="hidden" id="hidObjectName" runat="server" name="hidObjectName" />
           </td>
           <td id="cellCustomerName" runat="server">
             <div id="ltrCustomerName" style="width:100px; white-space: nowrap; text-overflow:ellipsis; overflow:hidden; text-align:center" nowrap="nowrap" runat="server"></div>
@@ -69,7 +75,6 @@
           </td>
           <td id="cellReceiptNo" runat="server">
             <asp:literal id="ltrReceiptNo" runat="server"></asp:literal>
-            <td></td>
           </td>
           <td id="cellScheduledAmount" runat="server" style="text-align: left">
             <asp:label id="lbScheduledMoneyReceivedAmount" runat="server"></asp:label>
@@ -81,31 +86,338 @@
           <td id="cellMoneyReceivedScheduleDay" runat="server">
             <asp:literal id="ltrMoneyReceivedScheduleDay" runat="server"></asp:literal>
           </td>
-        </tr>
+          <td id="cellDecisionDay" runat="server" nowrap="nowrap">
+            <asp:checkbox id="chkMoneyReceivedDecisionDay" runat="server"></asp:checkbox>
+            <asp:textbox id="txtMoneyReceivedDecisionDay" cssclass="w75 t-right" runat="server" columns="11"
+                        maxlength="8" style="IME-MODE: disabled;"></asp:textbox>
+            <input type="hidden" id="hidMoneyReceivedScheduledAmount" runat="server" name="hidMoneyReceivedScheduledAmount" />
+            <input type="hidden" runat="server" id="hidBulkNumber" name="hidBulkNumber" />
+            <asp:customvalidator id="cusTxtMoneyReceivedDecisionDay" controltovalidate="txtMoneyReceivedDecisionDay" errormessage="" runat="server" clientvalidationfunction="ClientValidationDateTime">*
+            </asp:customvalidator>
+          </td>
+          <td id="cellReceivedAmount" runat="server" nowrap="nowrap">
+            <a title="コピー" runat="server" id="hrefCopy">
+              <img src="./common/img/btn_copy_icon.gif" width="19" height="17" border="0" alt="コピー"/>
+              </a>
+              <asp:textbox id="txtMoneyReceivedAmount" runat="server" class="120 t-right"  maxlength="14" style="IME-MODE: disabled;" />
+              <asp:regularexpressionvalidator id="regTxtMoneyReceivedAmount" controltovalidate="txtMoneyReceivedAmount" runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellSeperateFee02" runat="server">
+              <asp:RadioButton id="radSeperateFee02" GroupName="SeperateFee" runat="server"></asp:RadioButton>
+            </td>
+            <td id="cellSeperateFee01" runat="server" align="center">
+              <asp:RadioButton id="radSeperateFee01" GroupName="SeperateFee" runat="server"></asp:RadioButton>
+            </td>
+            <td id="cellReset" runat="server">
+              <input name="btnReset" runat="server" id="btnReset" type="button" class="a-select" value="リセット" />
+            </td>
+            <td id="cellStampDutyFlg" runat="server">
+              <asp:CheckBox id="chkStampDutyFlg" runat="server" Enabled="false"></asp:CheckBox>
+            </td>
+            <td id="cellTransferCommision" runat="server" align="center" nowrap="nowrap">
+              <asp:textbox id="txtTransferCommision" cssclass="w120 t-right" maxlength="14" runat="server" style="IME-MODE: disabled;"></asp:textbox>
+              <asp:regularexpressionvalidator id="regTxtTransferCommision" controltovalidate="txtTransferCommision" runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellStampDutyAmount" runat="server" nowrap="nowrap">
+              <asp:textbox id="txtStampDutyAmount" runat="server" Enabled="False" cssclass="w120 t-right readonly"  maxlength="14"  style="IME-MODE: disabled;"></asp:textbox>
+              <asp:regularexpressionvalidator id="regTxtStampDutyAmount" controltovalidate="txtStampDutyAmount" runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellVariousAmount" runat="server" nowrap="nowrap">
+              <asp:textbox id="txtVariousExpanceTransferAmount" runat="server" cssclass="w120 t-right" maxlength="14" Enabled="False" style="IME-MODE: disabled;"></asp:textbox>
+              <asp:regularexpressionvalidator id="regTxtVariousExpanceTransferAmount" controltovalidate="txtVariousExpanceTransferAmount"
+                        runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellReturnAmount" runat="server" nowrap="nowrap">
+              <asp:textbox id="txtReturnAmount" runat="server" cssclass="w120 t-right" maxlength="14" Enabled="False" style="IME-MODE: disabled;"></asp:textbox>
+              <asp:regularexpressionvalidator id="regTextReturnAmount" controltovalidate="txtReturnAmount" runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellTemporarilyMoneyAmount" runat="server" nowrap="nowrap">
+              <asp:textbox id="txtTemporarilyMoneyAmount" runat="server" cssclass="w120 t-right" maxlength="14" Enabled="False" style="IME-MODE: disabled;"></asp:textbox>
+              <asp:regularexpressionvalidator id="regTxtTemporarilyMoneyAmount" controltovalidate="txtTemporarilyMoneyAmount" runat="server">*</asp:regularexpressionvalidator>
+            </td>
+            <td id="cellCSV" runat="server">
+              <asp:checkbox id="chkCSV" runat="Server"></asp:checkbox>
+              <input type="hidden" runat="server" id="hidCusMoneyReceivedPid" name="hidCusMoneyReceivedPid" />
+            </td>
+            <td id="cellPrintReceipt" runat="server"/>
+            <td id="cellDelete" runat="server">
+              <asp:imagebutton id="btnDelete" imageurl="../common/img/btn_delete3.gif" width="17" height="17" borderwidth="0" commandname="del" style="display:none" runat="server"></asp:imagebutton>
+            </td>
+          </tr>              
       </textarea>
     </div>
     <div class="column">
       <h4>Render Row</h4>
-      <textarea></textarea>
+      <textarea id="result"></textarea>
     </div>
   </div>
   <script>
-    var typeMap = [
-      { asp: "asp:textbox", render: "TextBoxRender" },
+    var typeMaps = [
+      { asp: "asp__textbox", render: "TextBoxRender" },
+      { asp: "asp__hiddenfield", render: "HiddenTextBoxRender" },
+      { asp: "asp__checkbox", render: "CheckBoxRender" },
+      { asp: "asp__radiobutton", render: "RadioRender" },
+      { asp: "asp__label", render: "LabelRender" },
+      { asp: "asp__literal", render: "LiteralRender" },
+      { asp: "asp__imagebutton", render: "ImageButtonRender" },
+      { asp: "asp__customvalidator", render: "CustomValidatorRender" },
+      { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender" },
     ]
-    function convert(ele) {
+    let code = "";
+    function convertRow(ele) {
       var parser = new DOMParser();
-      var xmlDoc = parser.parseFromString(ele.value, "text/xml");
+      var replaceValue = ele.value.replaceAll("<asp:", "<asp__").replaceAll("</asp:", "</asp__")
+      var xmlDoc = parser.parseFromString(replaceValue, "text/xml");
+      var error = xmlDoc.querySelector("parsererror>div");
+      if (error) {
+        document.getElementById("result").value = error.innerText;
+        // var line = findLineFromError(error.innerText);
+        // selectTextAreaLine(document.getElementById("input"), line)
+        return;
+      }
       var row = xmlDoc.firstChild;
-      var tag = row.nodeName.toLocaleLowerCase();
-      if (tag != "tr") {
+      var rowTag = row.nodeName.toLocaleLowerCase();
+      if (rowTag != "tr") {
         alert('xml repeater row must start wwith <tr> tag');
         return;
       }
-
+      code = "";
       var cells = row.querySelectorAll(":scope > td");
-      console.log(cells);
+      for (let i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        var cellId = cell.getAttribute("id");
+        var cellName = cellId ? cellId : `cell_${i}`;
+        code += `\n#region ${cellName}`
+        code += `\nvar ${cellName} = new HtmlCellRender();`
+        var controls = cell.childNodes;
+        for (let j = 0; j < controls.length; j++) {
+          const control = controls[j];
+          if (control.nodeType == Node.ELEMENT_NODE) {
+            code += convertNode(control, cellName);
+          }
+        }
+        code += "\n#endregion\n\n"
+      }
 
+      document.getElementById("result").value = code;
+    }
+
+    function convertNode(control, parentName) {
+      if (control.nodeType == Node.TEXT_NODE) return "";
+
+      let code = "";
+      var controlId = control.getAttribute("id");
+      var controlTag = control.nodeName.toLocaleLowerCase();
+      var controlType = (control.getAttribute("type") ?? "").toLocaleLowerCase();
+      var controlName = controlId ? controlId : `${parentName}_${controlTag}`;
+      var controlRunat = (control.getAttribute("runat") ?? "").toLocaleLowerCase();
+
+      var attrs = []
+      var styles = []
+      var skips = ["id", "name", "type", "runat", "commandname"];
+      for (const attr of control.attributes) {
+        var attrType = attr.name.toLocaleLowerCase();
+        if (skips.includes(attrType)) continue;
+        if (attrType != "style") {
+          attrs.push({
+            name: attrType,
+            value: attr.value,
+          });
+        }
+        if (attrType == "style") {
+          var styleSplit = attr.value.trim().split(";");
+          for (const item of styleSplit) {
+            var itemSplit = item.trim().split(":");
+            if (itemSplit.length == 2) {
+              styles.push({
+                name: itemSplit[0],
+                value: itemSplit[1],
+              });
+            }
+          }
+        }
+      }
+
+      var isServerControl = controlRunat == "server"
+      if (controlRunat == "server" && controlTag == "input" && controlType == "text") {
+        controlTag = "asp__textbox"
+      }
+      if (controlRunat == "server" && controlTag == "input" && controlType == "hidden") {
+        controlTag = "asp__hiddenfield"
+      }
+
+      var isAspControl = controlTag.startsWith("asp__");
+      var isGeneric = !isAspControl;
+
+      if (isAspControl) {
+        // console.table(attrs);
+        // console.table(styles);
+        var mapType = typeMaps.find((item) => item.asp == controlTag);
+        if (mapType) {
+          code += `\nvar ${controlName} = new ${mapType.render}(PrefixControl, index, "${controlName}");`;
+          var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl"];
+          var specials = attrs.filter(item => sepcialAtrr.includes(item.name));
+          var normals = attrs.filter(item => !sepcialAtrr.includes(item.name));
+
+          if (normals.length > 0 || styles.length > 0 || specials.length > 0) code += `\n{`
+          if (normals.length > 0) {
+            var list = "";
+            for (const item of normals) {
+              list += `{"${convertAspAttr(item.name)}","${item.value}"},`;
+            }
+            code += `\n    Attributes = new Dictionary<string, string> { ${list} },`
+          }
+          if (styles.length > 0) {
+            var list = "";
+            for (const item of styles) {
+              list += `{"${item.name}","${item.value}"},`;
+            }
+            code += `\n    Style = new Dictionary<string, string> { ${list} },`
+          }
+          if (specials.length > 0) {
+            for (const item of specials) {
+              code += `\n    ${convertAspSpecialAttr(item.name)} = ${convertAspSpecialValue(item.name, item.value)},`;
+            }
+          }
+          if (normals.length > 0 || styles.length > 0 || specials.length > 0) code += `\n};`
+          if (normals.length == 0 && styles.length == 0 && specials.length == 0) code += `();`
+        }
+        else {
+          code += `\n// [PLEASE MANUAL IMPLEMENT CONTROL]: ID="${controlName}"`;
+          code += `\n// ${parentName}.Add(${controlName});`
+          return code;
+        }
+      }
+
+      if (isGeneric) {
+        code += `\nvar ${controlName} = new HtmlGenericRender("${controlTag}")`;
+        if (attrs.length > 0 || styles.length > 0) code += `\n{`
+        if (attrs.length > 0) {
+          var list = "";
+          for (const item of attrs) {
+            list += `{"${item.name}","${item.value}"},`;
+          }
+          code += `\n    Attributes = new Dictionary<string, string> { ${list} },`
+        }
+        if (styles.length > 0) {
+          var list = "";
+          for (const item of styles) {
+            list += `{"${item.name}","${item.value}"},`;
+          }
+          code += `\n    Style = new Dictionary<string, string> { ${list} },`
+        }
+        if (attrs.length > 0 || styles.length > 0) code += `\n};`
+        if (attrs.length == 0 && styles.length == 0) code += `;`
+
+        control.childNodes.forEach(n => {
+          code += convertNode(n, controlName);
+        })
+      }
+
+      code += `\n${parentName}.Add(${controlName});`
+      return code;
+    }
+
+    function convertAspAttr(name) {
+      switch (name) {
+        case "cssclass":
+          return "class";
+        case "columns":
+          return "cols";
+        default:
+          return name;
+      }
+    }
+
+    function convertAspSpecialAttr(name) {
+      switch (name) {
+
+        case "readonly":
+          return "ReadOnly";
+
+        case "enabled":
+          return "Enabled";
+
+        case "visible":
+          return "Visible";
+
+        case "controltovalidate":
+          return "ControlToValidate";
+
+        case "clientvalidationfunction":
+          return "ClientValidationFunction";
+
+        case "imageurl":
+          return "ImageUrl";
+
+        case "errormessage":
+          return "ErrorMessage";
+
+        default:
+          return name;
+      }
+    }
+
+    function convertAspSpecialValue(attr, value) {
+      switch (attr) {
+        case "controltovalidate":
+          return `${value}.ClientID`;
+        case "clientvalidationfunction":
+          return `"${value}"`;
+        case "imageurl":
+          return `"${value}"`;
+        case "errormessage":
+          return `"${value}"`;
+        default:
+          return value;
+      }
+    }
+
+    function selectTextAreaLine(tarea, lineNum) {
+      lineNum--; // array starts at 0
+      var lines = tarea.value.split("\n");
+
+      // calculate start/end
+      var startPos = 0, endPos = tarea.value.length;
+      for (var x = 0; x < lines.length; x++) {
+        if (x == lineNum) {
+          break;
+        }
+        startPos += (lines[x].length + 1);
+
+      }
+
+      var endPos = lines[lineNum].length + startPos;
+
+      // do selection
+      // Chrome / Firefox
+
+      if (typeof (tarea.selectionStart) != "undefined") {
+        tarea.focus();
+        tarea.selectionStart = startPos;
+        tarea.selectionEnd = endPos;
+        return true;
+      }
+
+      // IE
+      if (document.selection && document.selection.createRange) {
+        tarea.focus();
+        tarea.select();
+        var range = document.selection.createRange();
+        range.collapse(true);
+        range.moveEnd("character", endPos);
+        range.moveStart("character", startPos);
+        range.select();
+        return true;
+      }
+
+      return false;
+    }
+
+    function findLineFromError(err) {
+      var firstLineSplit = err.split(" ");
+      var firstNum = firstLineSplit.find(n => !isNaN(n));
+      return parseInt(firstNum);
     }
   </script>
 </body>
