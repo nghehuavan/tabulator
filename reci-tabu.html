@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .row {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .column {
+      height: 100%;
+      display: flex;
+      flex: 50%;
+      flex-direction: column;
+    }
+
+    textarea {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Convert Repeater Row to Render </h1>
+  <div class="row">
+    <div class="column">
+      <h4>Repeater Row</h4>
+      <textarea onchange="convert(this)">
+        <tr id="rowContractLeft" runat="server">
+          <td id="cellObjectName" runat="server">
+            <input type="hidden" id="hidContractCondition" runat="server" />
+            <asp:literal id="ltrObjectName" runat="server"></asp:literal>
+            <asp:literal id="ltrRidgeName" runat="server"></asp:literal>
+            <asp:literal id="ltrRoomNumber" runat="server"></asp:literal>
+            <input type="hidden" id="hidClientCode" runat="server" name="hidClientCode" /><input type="hidden" id="hidCompanyCode" runat="server" name="hidCompanyCode" /><input type="hidden" id="hidContractInfoPid" runat="server" name="hidContractInfoPid" /><input type="hidden" runat="server" id="hidContractInsertDate" name="hidContractInsertDate" />
+            <input type="hidden" runat="server" id="hidMoneyReceivedNumber" name="hidMoneyReceivedNumber" />
+            <input type="hidden" id="hidObjectCode" runat="server" name="hidObjectCode" /> <input type="hidden" id="hidObjectName" runat="server" name="hidObjectName" />
+          </td>
+          <td id="cellCustomerName" runat="server">
+            <div id="ltrCustomerName" style="width:100px; white-space: nowrap; text-overflow:ellipsis; overflow:hidden; text-align:center" nowrap="nowrap" runat="server"></div>
+            <img src="../common/img/btn_renmei.gif" id="btnListCustomer" name="btnListCustomer" width="16"	height="15" border="0" alt="連名" style="display:none;cursor:pointer;" runat="Server" />
+            <asp:label id="lbStaffName" runat="server"></asp:label>
+          </td>
+          <td id="cellMoneyCustomerCode" runat="server">
+            <asp:literal id="ltrMoneyCustomerCode" runat="server"></asp:literal>
+          </td>
+          <td id="cellDepositNo" runat="server">
+            <asp:literal id="ltrDepositNo" runat="server"></asp:literal>
+          </td>
+          <td id="cellReceiptNo" runat="server">
+            <asp:literal id="ltrReceiptNo" runat="server"></asp:literal>
+            <td></td>
+          </td>
+          <td id="cellScheduledAmount" runat="server" style="text-align: left">
+            <asp:label id="lbScheduledMoneyReceivedAmount" runat="server"></asp:label>
+            <asp:label id="lbAmountKindName" runat="server"></asp:label>
+            <asp:label id="lbAmountKindCode" runat="server" style="display:none"></asp:label>
+            <asp:label id="lbAmountKindNumber" runat="server" style="display:none"></asp:label>
+            <asp:label id="lblContractFixationDate" runat="server" style="display:none"></asp:label>
+          </td>
+          <td id="cellMoneyReceivedScheduleDay" runat="server">
+            <asp:literal id="ltrMoneyReceivedScheduleDay" runat="server"></asp:literal>
+          </td>
+        </tr>
+      </textarea>
+    </div>
+    <div class="column">
+      <h4>Render Row</h4>
+      <textarea></textarea>
+    </div>
+  </div>
+  <script>
+    var typeMap = [
+      { asp: "asp:textbox", render: "TextBoxRender" },
+    ]
+    function convert(ele) {
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(ele.value, "text/xml");
+      var row = xmlDoc.firstChild;
+      var tag = row.nodeName.toLocaleLowerCase();
+      if (tag != "tr") {
+        alert('xml repeater row must start wwith <tr> tag');
+        return;
+      }
+
+      var cells = row.querySelectorAll(":scope > td");
+      console.log(cells);
+
+    }
+  </script>
+</body>
+
+</html>
