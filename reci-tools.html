@@ -39,7 +39,14 @@
     .fit {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .fit_wh {
+      display: flex;
       height: 100%;
+      width: 100%;
+      flex-direction: column;
     }
 
     textarea {
@@ -60,31 +67,53 @@
       <div id="tab-l" class="fit">
         <ul>
           <li><a href="#tab-l-1">Repeater Row</a></li>
-          <li><a href="#tab-l-2">Setting</a></li>
         </ul>
         <div id="tab-l-1" class="fit">
-          <textarea id="input" onchange="convertRow(this)" class="fit"></textarea>
-        </div>
-        <div id="tab-l-2" class="fit">
-          comming soon
+          <div class="fit_wh">
+            <b>=> Copy define from &lt;tr&gt; tag in Repeater>ItemTemplate => click outside to get Render code</b>
+            <textarea id="input" onchange="convertRow(this)" class="fit" sample="sample_data.txt"></textarea>
+          </div>
         </div>
       </div>
     </div>
     <div class="column">
       <div id="tab-r" class="fit">
         <ul>
-          <li><a href="#tab-r-1">Render</a></li>
-          <li><a href="#tab-r-2">Finder</a></li>
-          <li><a href="#tab-r-3">Tabulator</a></li>
+          <li><a href="#tab-r-1">render</a></li>
+          <li><a href="#tab-r-2">.ascx (asp.net)</a></li>
+          <li><a href="#tab-r-3">.tabulator.cs</a></li>
+          <li><a href="#tab-r-4">.ascx (js)</a></li>
+          <li><a href="#tab-r-5">finder</a></li>
         </ul>
         <div id="tab-r-1" class="fit">
-          <textarea id="result" class="fit"></textarea>
+          <div class="fit_wh">
+            <b>=> This is generated code for convert xxxItemDataBound</b>
+            <textarea id="result-render" class="fit"></textarea>
+          </div>
         </div>
         <div id="tab-r-2" class="fit">
-          comming soon
+          <div class="fit_wh">
+            <b>=> This is template code add to .acsx file</b>
+            <textarea sample="ascx.txt" class="fit"></textarea>
+          </div>
         </div>
         <div id="tab-r-3" class="fit">
-          comming soon
+          <div class="fit_wh">
+            <b>=> This is template code behind => change all XXX to your class</b>
+            <textarea sample="tabulator.cs.txt" class="fit"></textarea>
+          </div>
+        </div>
+        <div id="tab-r-4" class="fit">
+          <div class="fit_wh">
+            <b>=> This is template code js => change all XXX to your code</b>
+            <textarea sample="ascx.js.txt" class="fit"></textarea>
+          </div>
+        </div>
+        <div id="tab-r-5" class="fit">
+          <div class="fit_wh">
+            <b>=> This is example how to use Finder in Regist method</b>
+            <textarea sample="finder.txt" class="fit"></textarea>
+          </div>
         </div>
       </div>
     </div>
@@ -93,10 +122,19 @@
   <script type="text/javascript">
     $(document).ready(function () {
       $("#tab-l,#tab-r").tabs();
-      $.get("sample_data.txt", function (data, status) {
-        document.getElementById("input").value = data;
-        convertRow(document.getElementById("input"));
+      $("textarea").each(function () {
+        var thisObj = $(this);
+        var sample = thisObj.attr("sample");
+        if (sample) {
+          $.get(sample, function (data, status) {
+            thisObj.val(data);
+          });
+        }
       });
+
+      setTimeout(() => {
+        convertRow(document.getElementById("input"));
+      }, 3000)
     });
 
     var typeMaps = [
@@ -120,7 +158,7 @@
       var xmlDoc = parser.parseFromString(replaceValue, "text/xml");
       var error = xmlDoc.querySelector("parsererror>div");
       if (error) {
-        document.getElementById("result").value = error.innerText;
+        document.getElementById("result-render").value = error.innerText;
         // var line = findLineFromError(error.innerText);
         // selectTextAreaLine(document.getElementById("input"), line)
         return;
@@ -148,10 +186,10 @@
           }
         }
         codeDefine += "\n#endregion\n\n"
-        codeAddDic +=`\ndic["${cellName}"] = ${cellName}.ToHtml();`;
+        codeAddDic += `\ndic["${cellName}"] = ${cellName}.ToHtml();`;
       }
 
-      document.getElementById("result").value = codeDefine + codeAddDic;
+      document.getElementById("result-render").value = codeDefine + codeAddDic;
     }
 
     var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname", "text"];

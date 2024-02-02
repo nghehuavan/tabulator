@@ -1,0 +1,8 @@
+//HtmlInputHidden hidContractInfoPid = (HtmlInputHidden)itemResult.FindControl("hidContractInfoPid");
+var hidContractInfoPid = HiddenTextBoxFinder.Find(item, PrefixControl, "hidContractInfoPid");
+
+//TextBox txtMoneyReceivedDecisionDay = (TextBox)item.FindControl("txtMoneyReceivedDecisionDay");
+var txtMoneyReceivedDecisionDay = TextBoxFinder.Find(item, PrefixControl, "txtMoneyReceivedDecisionDay");
+
+//CheckBox chkMoneyReceivedDecisionDay = (CheckBox)item.FindControl("chkMoneyReceivedDecisionDay");
+var chkMoneyReceivedDecisionDay = CheckBoxFinder.Find(item, PrefixControl, "chkMoneyReceivedDecisionDay");

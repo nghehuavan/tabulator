@@ -1,0 +1,165 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Script.Serialization;
+using Kng.Application;
+using Kng.Projects.Project.Domain;
+using Linq.BusinessLayer;
+using Linq.BusinessLayer.Database;
+using Reci.Render;
+using Web.Render;
+
+namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
+{
+    // kng : 2024.01
+    public partial class XXXClass_Tabulator
+    {
+        #region TABULATOR REPEATER CONVERT
+
+        protected string PrefixControl = "ctl00_repXXX";
+
+        protected string ResultData
+        {
+            get
+            {
+                if (ViewState["ResultData"] != null)
+                    return (string)ViewState["ResultData"];
+                else
+                    return "[]";
+            }
+            set
+            {
+                ViewState["ResultData"] = value;
+            }
+        }
+
+        protected int DataCount
+        {
+            get
+            {
+                if (ViewState["DataCount"] != null)
+                    return (int)ViewState["DataCount"];
+                else
+                    return 0;
+            }
+            set
+            {
+                ViewState["DataCount"] = value;
+            }
+        }
+
+        protected string SetResultData(List<XXXModel> list)
+        {
+            DataCount = list.Count;
+            var jsonData = new List<Dictionary<string, object>>();
+            for (var i = 0; i < list.Count; i++)
+            {
+                var index = (i + 1).ToString();
+                index = index.Length == 1 ? index.PadLeft(2, '0') : index;
+                var row = list[i];
+                var dic = new Dictionary<string, object>();
+                repXXX_ItemDataBound_Tabulator(index, row, ref dic);
+                jsonData.Add(dic);
+            }
+
+            var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            var rs = serializer.Serialize(jsonData);
+            return rs;
+        }
+
+        // Convert for repXXX_ItemDataBound
+        protected void repXXX_ItemDataBound_Tabulator(string index, XXXModel data, ref Dictionary<string, object> dic)
+        {
+            //TODO: logic code here => copy from old method repXXX_ItemDataBound => use tab [Render] on tool to create Render define
+        }
+
+
+        #endregion
+
+        #region TABULATOR BUTTON ACTION
+
+        protected void btnAction_Click(object sender, EventArgs e)
+        {
+            var action = Request["__EVENTARGUMENT"];
+            switch (action)
+            {
+                case "btnCSV":
+                    ExportToCsv_Tabulator();
+                    break;
+
+                case "btnDelete":
+                    DeleteRow_Tabulator();
+                    break;
+
+                case "btnRegist":
+                    btnRegist_Click_Tabulator();
+                    break;
+            }
+        }
+
+        private void ExportToCsv_Tabulator()
+        {
+            var hids = txtActionData.Value.Split(',').Select(i => Global.ToDecoding(i)).ToList();            
+            //TODO: logic code here => copy from old method ExportToCsv()
+        }
+
+        private void DeleteRow_Tabulator()
+        {
+            var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            var dict = serializer.Deserialize<Dictionary<string, string>>(txtActionData.Value);
+            string args = dict["args"];
+            string hid = dict["hid"];
+
+            // TODO : Code here => => copy from old logic
+
+            this.UpdateRepeater();
+        }
+
+        private void btnRegist_Click_Tabulator()
+        {
+            var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            var list = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>[]>(txtActionData.Value);
+            var error = false;
+
+            //TODO: code check logic db error here if any
+
+            if (error == true)
+            {
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "page_action_result", "<script>alert('your error message');</script>");
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "<script>var __call_RestoreTabuValueOnError=true;</script>");
+                return;
+            }
+
+            if (regist_Tabulator(list))
+            {
+                this.registSucessful = true;
+                this.UpdateRepeater();
+            }
+        }
+
+        private bool regist_Tabulator(Dictionary<string, Dictionary<string, object>>[] list)
+        {
+            for (int i = 0; i < list.Length; i++)
+            {
+                //TODO: logic code here => copy from old method regist + use Finder.cs replace for lines item.FindControl
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region TABULATOR OVERRIDE METHOD
+
+        protected void SetFocusTextBox(params BaseRender[] textBoxs)
+        {
+            foreach (var textBox in textBoxs)
+            {
+                textBox.Attributes["onfocus"] = "focusTextbox(this);";
+                textBox.Attributes["onblur"] = "blurUnrequireTextbox(this);";
+            }
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,173 @@
+<script type="text/javascript">    
+    var prefixControl = '<%=PrefixControl%>';
+    var txtActionData_ClientID = '<%=txtActionData.ClientID %>';
+    var btnAction_UniqueID = '<%=btnAction.UniqueID %>';
+
+    var searchFlg = <%=SearchFlg ? "true" : "false"%>;
+    var tabulatorId = "#tabulatorResult";
+    var tabulatorData = <%=ResultData%>;
+    //console.log(tabulatorData);
+    var tabu;
+    $(function () {
+        if (searchFlg && $(tabulatorId).attr('id')) {
+            LoadData(tabulatorData);
+        }
+    });
+
+    var myColumns = CreateColumns();
+    function LoadData(listData) {
+        tabu = new Tabulator(tabulatorId, {
+            maxHeight: CalcGridHeight(),
+            tooltips: true,
+            layout: "fitColumns",
+            columns: myColumns,
+            columnHeaderVertAlign: "middle",
+            data: listData,
+            renderVertical: 'basic',
+        });
+
+        tabu.on("tableBuilt", function () {
+            document.getElementById("tabulatorSpinner").style.display = 'none';
+            document.getElementById("topAction").style.display = 'block';
+
+            // this flag set by server when have error
+            if (__call_RestoreTabuValueOnError) {
+                restoreTabuValueOnError();
+            }
+        });
+    }
+
+
+    function CreateColumns() {
+        var cols = new Array();
+        cols.push(
+            {
+                title: "XXX",
+                titleFormatter: "html",
+                field: 'cellXXX',
+                sorter: tabulatorUtil.customTextSorter,
+                width: 120,
+                hozAlign: "center",
+                vertAlign: "middle",
+                headerHozAlign: "center",
+                tooltip: true,
+                cssClass: 'wordWrap',
+                formatter: "html",
+            },
+        );
+        return cols;
+    }
+
+    function CalcGridHeight() {
+        var gridHeight = 400;
+        var container = $("#tabulator_container");
+        if (container) {
+            var docHeight = $(window).height();
+            var gridPosy = container.offset().top;
+            gridHeight = docHeight - gridPosy - 50;
+        }
+        return gridHeight;
+    }
+
+    function restoreTabuValueOnError() {
+        var items = JSON.parse(document.getElementById(txtActionData_ClientID).value);
+        items.forEach(item => {
+            for (const [key, ctrl] of Object.entries(item)) {
+                var targetEle = document.getElementById(key);
+                if (targetEle) {
+                    if (ctrl.value === true || ctrl.value === false) {
+                        targetEle.checked = ctrl.value;
+                    }
+                    else {
+                        targetEle.value = ctrl.value;
+                    }
+                    targetEle.disabled = ctrl.disabled;
+                    targetEle.readOnly = ctrl.readOnly;
+                }
+            }
+        })
+    }
+
+    function Check_Tabulator(hid, name, field) {
+        var current = hid.value == "true";
+        tabulatorUtil.checkAllColumn(field, name, !current);
+        hid.value = hid.value == "false" ? "true" : "false";
+    }
+
+    function exportCSV_Tabulator() {
+        var list = [];
+        var haveCheck = false;
+        var rows = tabu.getRows();
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var rowEle = r.getElement();
+            var data = r.getData();
+
+            // tabulator only render next 20 item when scroll down
+            var isRendered = rowEle.hasChildNodes();
+            if (!isRendered) {
+                var html = Object.values(data).join(",");
+                var virtualDomEle = htmlUtil.createElementFromHTML(html);
+                rowEle = virtualDomEle;
+            }
+
+            var ctl = (i + 1) < 10 ? "_ctl0" : "_ctl";
+            var preDetail = `${prefixControl}${ctl}${i + 1}_`;
+
+            var checkBox = rowEle.querySelector("#" + preDetail + "chkCSV");
+            if (checkBox && checkBox.checked) {
+                haveCheck = true;
+                var hidXXX = rowEle.querySelector("#" + preDetail + "hidXXX");
+                list.push(hidXXX.value);
+            }
+        }
+        document.getElementById(txtActionData_ClientID).value = list.join(",");
+        ConfirmOutputCSV(haveCheck);
+    }
+
+    // this function call by popup csv password (parent.checkOutputCSV)
+    function checkOutputCSV() {
+        __doPostBack(btnAction_UniqueID, "btnCSV");
+    }
+
+    function delete_Tabulator(allow, args, hid) {
+        if (confirmCancelTransferMoney(allow)) {
+            document.getElementById(txtActionData_ClientID).value = JSON.stringify({ args: args, hid: hid });
+            __doPostBack(btnAction_UniqueID, "btnDelete");
+        }
+    }
+
+    function regist_Tabulator() {
+        if (!checkValidInput_Tabulator()) return;
+
+        var list = tabulatorUtil.getInputData(tabu);
+        //console.log(list);
+        document.getElementById(txtActionData_ClientID).value = JSON.stringify(list);
+        __doPostBack(btnAction_UniqueID, "btnRegist");
+    }
+
+    function checkValidInput_Tabulator() {
+
+        if (page_ClientValidate_Tabulator() == false) {
+            return false;
+        }
+
+        // TODO: check other logic javascript
+
+        return confirmUpdate();
+    }
+
+    function page_ClientValidate_Tabulator() {
+        var v = tabulatorUtil.getVisibleValidator(tabu);
+        if (v != null) {
+            var msg = v.getAttribute("msg");
+            alert(msg);
+
+            var targetId = v.getAttribute("target");
+            var targetEle = document.querySelector(`#${targetId}`);
+            targetEle.focus();
+        }
+        return v == null
+    }   
+
+</script>

@@ -1,0 +1,9 @@
+    <!--検索結果 - Tabulator-->
+    <div id="tabulator_container" class="flex-center" >
+        <div id="tabulatorSpinner" class="flex-center" style="height: 100px"><img src="../common/img/loading-spinner-red.gif" alt="" runat="server" width="31" height="31" /></div>
+        <div id="tabulatorResult" width="100%"></div>
+        <div id="tabulatorAction" style="display: none">
+            <asp:HiddenField ID="txtActionData" runat="server"></asp:HiddenField>
+            <asp:Button ID="btnAction" runat="server" Text="Action" Visible="False" OnClick="btnAction_Click"></asp:Button>
+        </div>
+    </div>
