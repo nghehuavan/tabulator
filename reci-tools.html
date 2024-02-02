@@ -47,6 +47,8 @@
       white-space: nowrap;
       overflow: scroll;
       width: 100%;
+      font-size: 12px !important;
+      font-family: Consolas,monaco,monospace !important;
     }
   </style>
 </head>
@@ -200,7 +202,7 @@
         // console.table(styles);
         var mapType = typeMaps.find((item) => item.asp == controlTag);
         if (mapType) {
-          code += `\nvar ${controlName} = new ${mapType.render}(PrefixControl, index, "${controlName}");`;
+          code += `\nvar ${controlName} = new ${mapType.render}(PrefixControl, index, "${controlName}")`;
           var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname"];
           var specials = attrs.filter(item => sepcialAtrr.includes(item.name));
           var normals = attrs.filter(item => !sepcialAtrr.includes(item.name));
@@ -225,8 +227,8 @@
               code += `\n    ${convertAspSpecialAttr(item.name)} = ${convertAspSpecialValue(item.name, item.value)},`;
             }
           }
-          if (normals.length > 0 || styles.length > 0 || specials.length > 0) code += `\n};`
-          if (normals.length == 0 && styles.length == 0 && specials.length == 0) code += `();`
+          if (normals.length > 0 || styles.length > 0 || specials.length > 0) code += `\n}`
+          code += `;`
         }
         else {
           code += `\n// [PLEASE MANUAL IMPLEMENT CONTROL]: ID="${controlName}"`;
@@ -252,8 +254,8 @@
           }
           code += `\n    Style = new Dictionary<string, string> { ${list} },`
         }
-        if (attrs.length > 0 || styles.length > 0) code += `\n};`
-        if (attrs.length == 0 && styles.length == 0) code += `;`
+        if (attrs.length > 0 || styles.length > 0) code += `\n}`
+        code += `;`
 
         control.childNodes.forEach(n => {
           code += convertNode(n, controlName);
