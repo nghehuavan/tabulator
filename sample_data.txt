@@ -1,0 +1,113 @@
+<tr id="rowContractLeft" runat="server">
+  <td id="cellObjectName" runat="server">
+    <input type="hidden" id="hidContractCondition" runat="server" />
+    <asp:literal id="ltrObjectName" runat="server"></asp:literal>
+    <asp:literal id="ltrRidgeName" runat="server"></asp:literal>
+    <asp:literal id="ltrRoomNumber" runat="server"></asp:literal>
+    <input type="hidden" id="hidClientCode" runat="server" name="hidClientCode" />
+    <input type="hidden" id="hidCompanyCode" runat="server" name="hidCompanyCode" />
+    <input type="hidden" id="hidContractInfoPid" runat="server" name="hidContractInfoPid" />
+    <input type="hidden" runat="server" id="hidContractInsertDate" name="hidContractInsertDate" />
+    <input type="hidden" runat="server" id="hidMoneyReceivedNumber" name="hidMoneyReceivedNumber" />
+    <input type="hidden" id="hidObjectCode" runat="server" name="hidObjectCode" />
+    <input type="hidden" id="hidObjectName" runat="server" name="hidObjectName" />
+  </td>
+  <td id="cellCustomerName" runat="server">
+    <div id="ltrCustomerName"
+      style="width:100px; white-space: nowrap; text-overflow:ellipsis; overflow:hidden; text-align:center"
+      nowrap="nowrap" runat="server"></div>
+    <img src="../common/img/btn_renmei.gif" id="btnListCustomer" name="btnListCustomer" width="16" height="15"
+      border="0" alt="連名" style="display:none;cursor:pointer;" runat="Server" />
+    <asp:label id="lbStaffName" runat="server"></asp:label>
+  </td>
+  <td id="cellMoneyCustomerCode" runat="server">
+    <asp:literal id="ltrMoneyCustomerCode" runat="server"></asp:literal>
+  </td>
+  <td id="cellDepositNo" runat="server">
+    <asp:literal id="ltrDepositNo" runat="server"></asp:literal>
+  </td>
+  <td id="cellReceiptNo" runat="server">
+    <asp:literal id="ltrReceiptNo" runat="server"></asp:literal>
+    <asp:DropDownList ID="drpGuarantyNumber" runat="server" CssClass="w130" />
+  </td>
+  <td id="cellScheduledAmount" runat="server" style="text-align: left">
+    <asp:label id="lbScheduledMoneyReceivedAmount" runat="server"></asp:label>
+    <asp:label id="lbAmountKindName" runat="server"></asp:label>
+    <asp:label id="lbAmountKindCode" runat="server" style="display:none"></asp:label>
+    <asp:label id="lbAmountKindNumber" runat="server" style="display:none"></asp:label>
+    <asp:label id="lblContractFixationDate" runat="server" style="display:none"></asp:label>
+  </td>
+  <td id="cellMoneyReceivedScheduleDay" runat="server">
+    <asp:literal id="ltrMoneyReceivedScheduleDay" runat="server"></asp:literal>
+  </td>
+  <td id="cellDecisionDay" runat="server" nowrap="nowrap">
+    <asp:checkbox id="chkMoneyReceivedDecisionDay" runat="server"></asp:checkbox>
+    <asp:textbox id="txtMoneyReceivedDecisionDay" cssclass="w75 t-right" runat="server" columns="11" maxlength="8"
+      style="IME-MODE: disabled;"></asp:textbox>
+    <input type="hidden" id="hidMoneyReceivedScheduledAmount" runat="server" name="hidMoneyReceivedScheduledAmount" />
+    <input type="hidden" runat="server" id="hidBulkNumber" name="hidBulkNumber" />
+    <asp:customvalidator id="cusTxtMoneyReceivedDecisionDay" controltovalidate="txtMoneyReceivedDecisionDay"
+      errormessage="" runat="server" clientvalidationfunction="ClientValidationDateTime">*
+    </asp:customvalidator>
+  </td>
+  <td id="cellReceivedAmount" runat="server" nowrap="nowrap">
+    <a title="コピー" runat="server" id="hrefCopy">
+      <img src="./common/img/btn_copy_icon.gif" width="19" height="17" border="0" alt="コピー" />
+    </a>
+    <asp:textbox id="txtMoneyReceivedAmount" runat="server" class="120 t-right" maxlength="14"
+      style="IME-MODE: disabled;" />
+    <asp:regularexpressionvalidator id="regTxtMoneyReceivedAmount" controltovalidate="txtMoneyReceivedAmount"
+      runat="server">*</asp:regularexpressionvalidator>
+  </td>
+  <td id="cellSeperateFee02" runat="server">
+    <asp:RadioButton id="radSeperateFee02" GroupName="SeperateFee" runat="server"></asp:RadioButton>
+  </td>
+  <td id="cellSeperateFee01" runat="server" align="center">
+    <asp:RadioButton id="radSeperateFee01" GroupName="SeperateFee" runat="server"></asp:RadioButton>
+  </td>
+  <td id="cellReset" runat="server">
+    <input name="btnReset" runat="server" id="btnReset" type="button" class="a-select" value="リセット" />
+  </td>
+  <td id="cellStampDutyFlg" runat="server">
+    <asp:CheckBox id="chkStampDutyFlg" runat="server" Enabled="false"></asp:CheckBox>
+  </td>
+  <td id="cellTransferCommision" runat="server" align="center" nowrap="nowrap">
+    <asp:textbox id="txtTransferCommision" cssclass="w120 t-right" maxlength="14" runat="server"
+      style="IME-MODE: disabled;"></asp:textbox>
+    <asp:regularexpressionvalidator id="regTxtTransferCommision" controltovalidate="txtTransferCommision"
+      runat="server">*</asp:regularexpressionvalidator>
+  </td>
+  <td id="cellStampDutyAmount" runat="server" nowrap="nowrap">
+    <asp:textbox id="txtStampDutyAmount" runat="server" Enabled="False" cssclass="w120 t-right readonly" maxlength="14"
+      style="IME-MODE: disabled;"></asp:textbox>
+    <asp:regularexpressionvalidator id="regTxtStampDutyAmount" controltovalidate="txtStampDutyAmount" runat="server">*
+    </asp:regularexpressionvalidator>
+  </td>
+  <td id="cellVariousAmount" runat="server" nowrap="nowrap">
+    <asp:textbox id="txtVariousExpanceTransferAmount" runat="server" cssclass="w120 t-right" maxlength="14"
+      Enabled="False" style="IME-MODE: disabled;"></asp:textbox>
+    <asp:regularexpressionvalidator id="regTxtVariousExpanceTransferAmount"
+      controltovalidate="txtVariousExpanceTransferAmount" runat="server">*</asp:regularexpressionvalidator>
+  </td>
+  <td id="cellReturnAmount" runat="server" nowrap="nowrap">
+    <asp:textbox id="txtReturnAmount" runat="server" cssclass="w120 t-right" maxlength="14" Enabled="False"
+      style="IME-MODE: disabled;"></asp:textbox>
+    <asp:regularexpressionvalidator id="regTextReturnAmount" controltovalidate="txtReturnAmount" runat="server">*
+    </asp:regularexpressionvalidator>
+  </td>
+  <td id="cellTemporarilyMoneyAmount" runat="server" nowrap="nowrap">
+    <asp:textbox id="txtTemporarilyMoneyAmount" runat="server" cssclass="w120 t-right" maxlength="14" Enabled="False"
+      style="IME-MODE: disabled;"></asp:textbox>
+    <asp:regularexpressionvalidator id="regTxtTemporarilyMoneyAmount" controltovalidate="txtTemporarilyMoneyAmount"
+      runat="server">*</asp:regularexpressionvalidator>
+  </td>
+  <td id="cellCSV" runat="server">
+    <asp:checkbox id="chkCSV" runat="Server"></asp:checkbox>
+    <input type="hidden" runat="server" id="hidCusMoneyReceivedPid" name="hidCusMoneyReceivedPid" />
+  </td>
+  <td id="cellPrintReceipt" runat="server" />
+  <td id="cellDelete" runat="server">
+    <asp:imagebutton id="btnDelete" imageurl="../common/img/btn_delete3.gif" width="17" height="17" borderwidth="0"
+      commandname="del" style="display:none" runat="server"></asp:imagebutton>
+  </td>
+</tr>
