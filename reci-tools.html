@@ -8,8 +8,8 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/jqueryui@1.11.1/jquery-ui.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" rel="stylesheet">
   <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.4.4/luxon.min.js"></script>
@@ -36,36 +36,67 @@
       flex-direction: column;
     }
 
+    .fit {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
     textarea {
       flex-grow: 1;
       white-space: nowrap;
       overflow: scroll;
+      width: 100%;
     }
   </style>
 </head>
 
 <body>
   <h1>Convert Repeater Row to Render Tool </h1>
-
   <div class="row">
     <div class="column">
-      <h4>Repeater Row</h4>
-      <textarea id="input" onchange="convertRow(this)"></textarea>
+      <div id="tab-l" class="fit">
+        <ul>
+          <li><a href="#tab-l-1">Repeater Row</a></li>
+          <li><a href="#tab-l-2">Setting</a></li>
+        </ul>
+        <div id="tab-l-1" class="fit">
+          <textarea id="input" onchange="convertRow(this)" class="fit"></textarea>
+        </div>
+        <div id="tab-l-2" class="fit">
+          comming soon
+        </div>
+      </div>
     </div>
     <div class="column">
-      <h4>Render Row</h4>
-      <textarea id="result"></textarea>
+      <div id="tab-r" class="fit">
+        <ul>
+          <li><a href="#tab-r-1">Render</a></li>
+          <li><a href="#tab-r-2">Finder</a></li>
+          <li><a href="#tab-r-3">Tabulator</a></li>
+        </ul>
+        <div id="tab-r-1" class="fit">
+          <textarea id="result" class="fit"></textarea>
+        </div>
+        <div id="tab-r-2" class="fit">
+          comming soon
+        </div>
+        <div id="tab-r-3" class="fit">
+          comming soon
+        </div>
+      </div>
     </div>
   </div>
 
   <script type="text/javascript">
     $(document).ready(function () {
+      $("#tab-l,#tab-r").tabs();
       $.get("sample_data.txt", function (data, status) {
         document.getElementById("input").value = data;
         convertRow(document.getElementById("input"));
       });
     });
-    
+
     var typeMaps = [
       { asp: "asp__textbox", render: "TextBoxRender" },
       { asp: "asp__hiddenfield", render: "HiddenTextBoxRender" },
