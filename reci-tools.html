@@ -112,7 +112,8 @@
       { asp: "asp__customvalidator", render: "CustomValidatorRender" },
       { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender" },
     ]
-    let code = "";
+    let codeDefine = "";
+    let codeAddDic = "";
     function convertRow(ele) {
       var parser = new DOMParser();
       var replaceValue = ele.value.replaceAll("<asp:", "<asp__").replaceAll("</asp:", "</asp__")
@@ -130,25 +131,27 @@
         alert('xml repeater row must start with <tr> tag');
         return;
       }
-      code = "";
+      codeDefine = "";
+      codeAddDic = "";
       var cells = row.querySelectorAll(":scope > td");
       for (let i = 0; i < cells.length; i++) {
         var cell = cells[i];
         var cellId = cell.getAttribute("id") ?? cell.getAttribute("ID");
         var cellName = cellId ? cellId : `cell_${i}`;
-        code += `\n#region ${cellName}`
-        code += `\nvar ${cellName} = new HtmlCellRender();`
+        codeDefine += `\n#region ${cellName}`
+        codeDefine += `\nvar ${cellName} = new HtmlCellRender();`
         var controls = cell.childNodes;
         for (let j = 0; j < controls.length; j++) {
           const control = controls[j];
           if (control.nodeType == Node.ELEMENT_NODE) {
-            code += convertNode(control, cellName);
+            codeDefine += convertNode(control, cellName);
           }
         }
-        code += "\n#endregion\n\n"
+        codeDefine += "\n#endregion\n\n"
+        codeAddDic +=`\ndic["${cellName}"] = ${cellName}.ToHtml();`;
       }
 
-      document.getElementById("result").value = code;
+      document.getElementById("result").value = codeDefine + codeAddDic;
     }
 
     var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname", "text"];
