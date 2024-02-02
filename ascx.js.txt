@@ -30,7 +30,8 @@
             document.getElementById("tabulatorSpinner").style.display = 'none';
             document.getElementById("topAction").style.display = 'block';
 
-            // this flag set by server when have error
+            // flag __call_RestoreTabuValueOnError set by server when have error
+            // C#: Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "<script>var __call_RestoreTabuValueOnError=true;</script>");
             if (__call_RestoreTabuValueOnError) {
                 restoreTabuValueOnError();
             }
@@ -69,6 +70,7 @@
         return gridHeight;
     }
 
+    // this function for restore old input value to tabulator when postback error
     function restoreTabuValueOnError() {
         var items = JSON.parse(document.getElementById(txtActionData_ClientID).value);
         items.forEach(item => {
@@ -88,12 +90,14 @@
         })
     }
 
-    function Check_Tabulator(hid, name, field) {
+    // this function for all checkbox in column
+    function Check_Tabulator(hid, chkName, field) {
         var current = hid.value == "true";
-        tabulatorUtil.checkAllColumn(field, name, !current);
+        tabulatorUtil.checkAllColumn(field, chkName, !current);
         hid.value = hid.value == "false" ? "true" : "false";
     }
 
+    // this function for button export CSV
     function exportCSV_Tabulator() {
         var list = [];
         var haveCheck = false;
@@ -130,6 +134,7 @@
         __doPostBack(btnAction_UniqueID, "btnCSV");
     }
 
+    // this function for button delete on repeater
     function delete_Tabulator(allow, args, hid) {
         if (confirmCancelTransferMoney(allow)) {
             document.getElementById(txtActionData_ClientID).value = JSON.stringify({ args: args, hid: hid });
@@ -137,6 +142,7 @@
         }
     }
 
+    // this function for button regist
     function regist_Tabulator() {
         if (!checkValidInput_Tabulator()) return;
 
@@ -146,6 +152,7 @@
         __doPostBack(btnAction_UniqueID, "btnRegist");
     }
 
+    // this function validate all before submit to server
     function checkValidInput_Tabulator() {
 
         if (page_ClientValidate_Tabulator() == false) {
@@ -157,6 +164,7 @@
         return confirmUpdate();
     }
 
+    // this function simulate for aps.net Page_ClientValidate
     function page_ClientValidate_Tabulator() {
         var v = tabulatorUtil.getVisibleValidator(tabu);
         if (v != null) {
