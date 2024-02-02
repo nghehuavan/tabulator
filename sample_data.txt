@@ -39,6 +39,7 @@
   </td>
   <td id="cellMoneyReceivedScheduleDay" runat="server">
     <asp:literal id="ltrMoneyReceivedScheduleDay" runat="server"></asp:literal>
+    <asp:Button id="btnDownload" runat="server" style="text-align:center" Text="結果参照"></asp:Button>
   </td>
   <td id="cellDecisionDay" runat="server" nowrap="nowrap">
     <asp:checkbox id="chkMoneyReceivedDecisionDay" runat="server"></asp:checkbox>

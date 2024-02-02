@@ -48,7 +48,7 @@
       overflow: scroll;
       width: 100%;
       font-size: 12px !important;
-      font-family: Consolas,monaco,monospace !important;
+      font-family: Consolas, monaco, monospace !important;
     }
   </style>
 </head>
@@ -107,6 +107,7 @@
       { asp: "asp__dropdownlist", render: "DropDownListRender" },
       { asp: "asp__label", render: "LabelRender" },
       { asp: "asp__literal", render: "LiteralRender" },
+      { asp: "asp__button", render: "ButtonRender" },
       { asp: "asp__imagebutton", render: "ImageButtonRender" },
       { asp: "asp__customvalidator", render: "CustomValidatorRender" },
       { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender" },
@@ -150,6 +151,7 @@
       document.getElementById("result").value = code;
     }
 
+    var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname", "text"];
     function convertNode(control, parentName) {
       if (control.nodeType == Node.TEXT_NODE) return "";
 
@@ -203,7 +205,6 @@
         var mapType = typeMaps.find((item) => item.asp == controlTag);
         if (mapType) {
           code += `\nvar ${controlName} = new ${mapType.render}(PrefixControl, index, "${controlName}")`;
-          var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname"];
           var specials = attrs.filter(item => sepcialAtrr.includes(item.name));
           var normals = attrs.filter(item => !sepcialAtrr.includes(item.name));
 
@@ -304,6 +305,8 @@
         case "groupname":
           return "GroupName";
 
+        case "text":
+          return "Text";
         default:
           return name;
       }
@@ -324,6 +327,9 @@
           return `"${value}"`;
 
         case "groupname":
+          return `"${value}"`;
+
+        case "text":
           return `"${value}"`;
 
         default:
