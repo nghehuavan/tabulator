@@ -143,6 +143,12 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
             for (int i = 0; i < list.Length; i++)
             {
                 //TODO: logic code here => copy from old method regist + use Finder.cs replace for lines item.FindControl
+
+                // Example:
+                //HtmlInputHidden hidContractInfoPid = (HtmlInputHidden)itemResult.FindControl("hidContractInfoPid");
+                // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+                // var hidContractInfoPid = HiddenTextBoxFinder.Find(item, PrefixControl, "hidContractInfoPid");
+
             }
             return true;
         }
