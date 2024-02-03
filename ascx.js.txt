@@ -31,8 +31,8 @@
             document.getElementById("topAction").style.display = 'block';
 
             // flag __call_RestoreTabuValueOnError set by server when have error
-            // C#: Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "<script>var __call_RestoreTabuValueOnError=true;</script>");
-            if (__call_RestoreTabuValueOnError) {
+            // C#: Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "var __call_RestoreTabuValueOnError=true;");
+            if (typeof (__call_RestoreTabuValueOnError) != 'undefined') {
                 restoreTabuValueOnError();
             }
         });
