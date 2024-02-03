@@ -1,0 +1,7 @@
+// this code use function regist_Tabulator on javascript please check on tab ".ascx (js)"
+var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+var list = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>[]>(txtActionData.Value);
+for (int i = 0; i < list.Length; i++)
+{
+    var item = list[i];{{FINDER_CODE}}
+}

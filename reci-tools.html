@@ -112,7 +112,7 @@
         <div id="tab-r-5" class="fit">
           <div class="fit_wh">
             <b>=> This is example how to use Finder in Regist method</b>
-            <textarea sample="finder.txt" class="fit"></textarea>
+            <textarea id="result-finder" sample="finder.txt" class="fit"></textarea>
           </div>
         </div>
       </div>
@@ -120,6 +120,11 @@
   </div>
 
   <script type="text/javascript">
+    var finderTemplate = "";
+    $.get("finder.template.txt", function (data, status) {
+      finderTemplate = data;
+    });
+
     $(document).ready(function () {
       $("#tab-l,#tab-r").tabs();
       $("textarea").each(function () {
@@ -131,27 +136,27 @@
           });
         }
       });
-
       setTimeout(() => {
         convertRow(document.getElementById("input"));
       }, 3000)
     });
 
     var typeMaps = [
-      { asp: "asp__textbox", render: "TextBoxRender" },
-      { asp: "asp__hiddenfield", render: "HiddenTextBoxRender" },
-      { asp: "asp__checkbox", render: "CheckBoxRender" },
-      { asp: "asp__radiobutton", render: "RadioRender" },
-      { asp: "asp__dropdownlist", render: "DropDownListRender" },
-      { asp: "asp__label", render: "LabelRender" },
-      { asp: "asp__literal", render: "LiteralRender" },
-      { asp: "asp__button", render: "ButtonRender" },
-      { asp: "asp__imagebutton", render: "ImageButtonRender" },
-      { asp: "asp__customvalidator", render: "CustomValidatorRender" },
-      { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender" },
+      { asp: "asp__textbox", render: "TextBoxRender", finder: "TextBoxFinder" },
+      { asp: "asp__hiddenfield", render: "HiddenTextBoxRender", finder: "HiddenTextBoxFinder" },
+      { asp: "asp__checkbox", render: "CheckBoxRender", finder: "CheckBoxFinder" },
+      { asp: "asp__radiobutton", render: "RadioRender", finder: "RadioFinder" },
+      { asp: "asp__dropdownlist", render: "DropDownListRender", finder: "DropDownListFinder" },
+      { asp: "asp__label", render: "LabelRender", finder: "LabelFinder" },
+      { asp: "asp__literal", render: "LiteralRender", finder: "LiteralFinder" },
+      { asp: "asp__button", render: "ButtonRender", finder: null },
+      { asp: "asp__imagebutton", render: "ImageButtonRender", finder: null },
+      { asp: "asp__customvalidator", render: "CustomValidatorRender", finder: null },
+      { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender", finder: null },
     ]
     let codeDefine = "";
     let codeAddDic = "";
+    let codeFinder = "";
     function convertRow(ele) {
       var parser = new DOMParser();
       var replaceValue = ele.value.replaceAll("<asp:", "<asp__").replaceAll("</asp:", "</asp__")
@@ -171,6 +176,7 @@
       }
       codeDefine = "";
       codeAddDic = "";
+      codeFinder = "";
       var cells = row.querySelectorAll(":scope > td");
       for (let i = 0; i < cells.length; i++) {
         var cell = cells[i];
@@ -190,6 +196,7 @@
       }
 
       document.getElementById("result-render").value = codeDefine + codeAddDic;
+      document.getElementById("result-finder").value = finderTemplate.replace("{{FINDER_CODE}}", codeFinder);
     }
 
     var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname", "text"];
@@ -271,6 +278,10 @@
           }
           if (normals.length > 0 || styles.length > 0 || specials.length > 0) code += `\n}`
           code += `;`
+
+          if (mapType.finder) {
+            codeFinder += `\n    var ${controlId} = ${mapType.finder}.Find(item, PrefixControl, "${controlId}");`;
+          }
         }
         else {
           code += `\n// [PLEASE MANUAL IMPLEMENT CONTROL]: ID="${controlName}"`;
