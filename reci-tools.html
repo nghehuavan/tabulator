@@ -164,6 +164,7 @@
       var error = xmlDoc.querySelector("parsererror>div");
       if (error) {
         document.getElementById("result-render").value = error.innerText;
+        document.getElementById("result-finder").value = error.innerText;
         // var line = findLineFromError(error.innerText);
         // selectTextAreaLine(document.getElementById("input"), line)
         return;
