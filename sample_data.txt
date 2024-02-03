@@ -109,6 +109,6 @@
   <td id="cellPrintReceipt" runat="server" />
   <td id="cellDelete" runat="server">
     <asp:imagebutton id="btnDelete" imageurl="../common/img/btn_delete3.gif" width="17" height="17" borderwidth="0"
-      commandname="del" style="display:none" runat="server"></asp:imagebutton>
+      commandname="del" style="display:none" AlternateText="Image text" runat="server"></asp:imagebutton>
   </td>
 </tr>
