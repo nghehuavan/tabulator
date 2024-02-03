@@ -135,9 +135,12 @@
     }
 
     // this function for button delete on repeater
-    function delete_Tabulator(allow, args, hid) {
-        if (confirmCancelTransferMoney(allow)) {
-            document.getElementById(txtActionData_ClientID).value = JSON.stringify({ args: args, hid: hid });
+    function delete_Tabulator(allow, ele) {
+        if (confirmCancel(allow)) {
+            var rowEle = tabulatorUtil.findParentRow(ele);
+            var data = tabulatorUtil.getRowInputData(rowEle);
+            var args = ele.getAttribute("args");
+            document.getElementById(txtActionData_ClientID).value = JSON.stringify({ ...data, args: { value: args } });
             __doPostBack(btnAction_UniqueID, "btnDelete");
         }
     }

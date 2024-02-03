@@ -107,9 +107,11 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
         private void DeleteRow_Tabulator()
         {
             var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var dict = serializer.Deserialize<Dictionary<string, string>>(txtActionData.Value);
-            string args = dict["args"];
-            string hid = dict["hid"];
+            var item = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(txtActionData.Value);
+            var args = item["args"]["value"].ToString();
+
+            // use Finder again
+            // var hidBulkNumber = HiddenTextBoxFinder.Find(item, PrefixControl, "hidBulkNumber");
 
             // TODO : Code here => => copy from old logic
 
