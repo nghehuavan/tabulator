@@ -1,23 +1,21 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
+using System.Transactions;
 using System.Web.Script.Serialization;
 using Kng.Application;
 using Kng.Projects.Project.Domain;
-using Linq.BusinessLayer;
-using Linq.BusinessLayer.Database;
 using Reci.Render;
 using Web.Render;
 
-namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
+namespace Kng.Projects.Project.Presentation.Web.Recm.MXX
 {
     // kng : 2024.01
-    public partial class XXXClass_Tabulator
+    public partial class SAMPLE_Tabulator
     {
         #region TABULATOR REPEATER CONVERT
 
-        protected string PrefixControl = "ctl00_repXXX";
+        protected string PrefixControl = "ctl00_repResult";
 
         protected string ResultData
         {
@@ -49,7 +47,7 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
             }
         }
 
-        protected string SetResultData(List<XXXModel> list)
+        protected string SetResultData(List<TraderMoneyTransferResult> list)
         {
             DataCount = list.Count;
             var jsonData = new List<Dictionary<string, object>>();
@@ -57,9 +55,9 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
             {
                 var index = (i + 1).ToString();
                 index = index.Length == 1 ? index.PadLeft(2, '0') : index;
-                var row = list[i];
+                var data = list[i];
                 var dic = new Dictionary<string, object>();
-                repXXX_ItemDataBound_Tabulator(index, row, ref dic);
+                repResult_ItemDataBound_Tabulator(index, data, ref dic);
                 jsonData.Add(dic);
             }
 
@@ -68,10 +66,14 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
             return rs;
         }
 
-        // Convert for repXXX_ItemDataBound
-        protected void repXXX_ItemDataBound_Tabulator(string index, XXXModel data, ref Dictionary<string, object> dic)
+        // Convert for repResult_ItemDataBound
+        private void repResult_ItemDataBound_Tabulator(string index, TraderMoneyTransferResult data, ref Dictionary<string, object> dic)
         {
-            //TODO: logic code here => copy from old method repXXX_ItemDataBound => use tab [Render] on tool to create Render define
+            {{RENDER_DEFINE}}
+
+            // COPY OLD LOGIC HERE
+
+            {{RENDER_ADD_DIC}}
         }
 
 
@@ -100,8 +102,15 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
 
         private void ExportToCsv_Tabulator()
         {
-            var hids = txtActionData.Value.Split(',').Select(i => Global.ToDecoding(i)).ToList();            
-            //TODO: logic code here => copy from old method ExportToCsv()
+            var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
+            var item = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(txtActionData.Value);
+
+            for (int i = 0; i < list.Length; i++)
+            {
+                var item = item[i];{{FINDER_CODE}}
+
+                // COPY OLD LOGIC HERE
+            }
         }
 
         private void DeleteRow_Tabulator()
@@ -110,49 +119,22 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.XXXFolder
             var item = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(txtActionData.Value);
             var args = item["args"]["value"].ToString();
 
-            // use Finder again
-            // var hidBulkNumber = HiddenTextBoxFinder.Find(item, PrefixControl, "hidBulkNumber");
+            {{FINDER_CODE}}
 
-            // TODO : Code here => => copy from old logic
-
-            this.UpdateRepeater();
+            // COPY OLD LOGIC HERE
         }
 
         private void btnRegist_Click_Tabulator()
         {
             var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
             var list = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>[]>(txtActionData.Value);
-            var error = false;
 
-            //TODO: code check logic db error here if any
-
-            if (error == true)
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "page_action_result", "<script>alert('your error message');</script>");
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "<script>var __call_RestoreTabuValueOnError=true;</script>");
-                return;
-            }
-
-            if (regist_Tabulator(list))
-            {
-                this.registSucessful = true;
-                this.UpdateRepeater();
-            }
-        }
-
-        private bool regist_Tabulator(Dictionary<string, Dictionary<string, object>>[] list)
-        {
             for (int i = 0; i < list.Length; i++)
             {
-                //TODO: logic code here => copy from old method regist + use Finder.cs replace for lines item.FindControl
+                var item = item[i];{{FINDER_CODE}}
 
-                // Example:
-                //HtmlInputHidden hidContractInfoPid = (HtmlInputHidden)itemResult.FindControl("hidContractInfoPid");
-                // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-                // var hidContractInfoPid = HiddenTextBoxFinder.Find(item, PrefixControl, "hidContractInfoPid");
-
+                // COPY OLD LOGIC HERE
             }
-            return true;
         }
 
         #endregion

@@ -100,19 +100,19 @@
         <div id="tab-r-3" class="fit">
           <div class="fit_wh">
             <b>=> This is template code behind => change all XXX to your class</b>
-            <textarea sample="tabulator.cs.txt" class="fit"></textarea>
+            <textarea id="result-cs" sample="tabulator.cs.txt" class="fit"></textarea>
           </div>
         </div>
         <div id="tab-r-4" class="fit">
           <div class="fit_wh">
             <b>=> This is template code js => change all XXX to your code</b>
-            <textarea sample="ascx.js.txt" class="fit"></textarea>
+            <textarea id="result-js" sample="ascx.js.txt" class="fit"></textarea>
           </div>
         </div>
         <div id="tab-r-5" class="fit">
           <div class="fit_wh">
             <b>=> This is example how to use Finder in Regist method</b>
-            <textarea id="result-finder" sample="finder.txt" class="fit"></textarea>
+            <textarea id="result-finder" sample="finder.template.txt" class="fit"></textarea>
           </div>
         </div>
       </div>
@@ -121,10 +121,8 @@
 
   <script type="text/javascript">
     var finderTemplate = "";
-    $.get("finder.template.txt", function (data, status) {
-      finderTemplate = data;
-    });
-
+    var tabulatorCsTemplate = "";
+    var jsTemplate = "";
     $(document).ready(function () {
       $("#tab-l,#tab-r").tabs();
       $("textarea").each(function () {
@@ -133,6 +131,15 @@
         if (sample) {
           $.get(sample, function (data, status) {
             thisObj.val(data);
+            if (sample == "finder.template.txt") {
+              finderTemplate = data;
+            }
+            if (sample == "tabulator.cs.txt") {
+              tabulatorCsTemplate = data;
+            }
+            if (sample == "ascx.js.txt") {
+              jsTemplate = data;
+            }
           });
         }
       });
@@ -154,9 +161,11 @@
       { asp: "asp__customvalidator", render: "CustomValidatorRender", finder: null },
       { asp: "asp__regularexpressionvalidator", render: "RegularExpressionValidatorRender", finder: null },
     ]
+    let arrCells = [];
     let codeDefine = "";
     let codeAddDic = "";
     let codeFinder = "";
+    let codeJs = "";
     function convertRow(ele) {
       var parser = new DOMParser();
       var replaceValue = ele.value.replaceAll("<asp:", "<asp__").replaceAll("</asp:", "</asp__")
@@ -175,9 +184,11 @@
         alert('xml repeater row must start with <tr> tag');
         return;
       }
+      arrCells = [];
       codeDefine = "";
       codeAddDic = "";
       codeFinder = "";
+      codeJs = "";
       var cells = row.querySelectorAll(":scope > td");
       for (let i = 0; i < cells.length; i++) {
         var cell = cells[i];
@@ -193,11 +204,38 @@
           }
         }
         codeDefine += "\n#endregion\n"
-        codeAddDic += `\ndic["${cellName}"] = ${cellName}.ToHtml();`;
+        arrCells.push(cellName);
       }
 
+      codeAddDic = arrCells.map(item => `\ndic["${item}"] = ${item}.ToHtml();`).join("");
       document.getElementById("result-render").value = codeDefine + codeAddDic;
+
       document.getElementById("result-finder").value = finderTemplate.replace("{{FINDER_CODE}}", codeFinder);
+      var csCode = tabulatorCsTemplate.replace("{{RENDER_DEFINE}}", codeDefine).replace("{{RENDER_ADD_DIC}}", codeAddDic).replaceAll("{{FINDER_CODE}}", codeFinder);
+      document.getElementById("result-cs").value = csCode;
+
+      var tabuCols = "";
+      arrCells.forEach(item => {
+        var templateCol = `
+            {
+                title: "{{CELL}}",
+                titleFormatter: "html",
+                //headerSort: false,
+                field: 'cellObjectName',
+                //width: 100,
+                sorter: tabulatorUtil.customTextSorter,
+                hozAlign: "center",
+                vertAlign: "middle",
+                headerHozAlign: "center",
+                tooltip: true,
+                cssClass: 'wordWrap',
+                formatter: "html",
+                //formatter: tabulatorUtil.customValidateFormatter,
+            },`;
+        tabuCols += templateCol.replace("{{CELL}}", item);
+      });
+      codeJs = jsTemplate.replace("{{TABU_COLS}}", tabuCols);
+      document.getElementById("result-js").value = codeJs
     }
 
     var sepcialAtrr = ["readonly", "enabled", "visible", "controltovalidate", "clientvalidationfunction", "errormessage", "imageurl", "groupname", "text"];
@@ -330,7 +368,7 @@
 
         case "alternatetext":
           return "alt";
-          
+
         default:
           return name;
       }
