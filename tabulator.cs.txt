@@ -131,7 +131,7 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.MXX
 
             for (int i = 0; i < list.Length; i++)
             {
-                var item = item[i];{{FINDER_CODE}}
+                var item = list[i];{{FINDER_CODE}}
 
                 // COPY OLD LOGIC HERE
             }
