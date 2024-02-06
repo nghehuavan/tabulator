@@ -223,18 +223,18 @@
                 title: "{{CELL}}",
                 titleFormatter: "html",
                 //headerSort: false,
-                field: 'cellObjectName',
+                field: "{{CELL}}",
                 //width: 100,
                 sorter: tabulatorUtil.customTextSorter,
                 hozAlign: "center",
                 vertAlign: "middle",
                 headerHozAlign: "center",
                 tooltip: true,
-                cssClass: 'wordWrap',
+                cssClass: "wordWrap",
                 formatter: "html",
                 //formatter: tabulatorUtil.customValidateFormatter,
             },`;
-        tabuCols += templateCol.replace("{{CELL}}", item);
+        tabuCols += templateCol.replaceAll("{{CELL}}", item);
       });
       codeJs = jsTemplate.replace("{{TABU_COLS}}", tabuCols);
       document.getElementById("result-js").value = codeJs
