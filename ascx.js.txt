@@ -63,8 +63,8 @@
             for (const [key, ctrl] of Object.entries(item)) {
                 var targetEle = document.getElementById(key);
                 if (targetEle) {
-                    if (ctrl.value === true || ctrl.value === false) {
-                        targetEle.checked = ctrl.value;
+                    if (ctrl.checked === true || ctrl.checked === false) {
+                        targetEle.checked = ctrl.checked;
                     }
                     else {
                         targetEle.value = ctrl.value;
@@ -74,7 +74,7 @@
                 }
             }
         })
-    }
+	}
 
     function Check_Tabulator(hid, name, field) {
         var current = hid.value == "true";
