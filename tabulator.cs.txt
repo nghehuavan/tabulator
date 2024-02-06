@@ -103,9 +103,9 @@ namespace Kng.Projects.Project.Presentation.Web.Recm.MXX
         private void ExportToCsv_Tabulator()
         {
             var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var item = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(txtActionData.Value);
+            var list = serializer.Deserialize<Dictionary<string, Dictionary<string, object>>[]>(txtActionData.Value);
 
-            for (int i = 0; i < list.Length; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 var item = item[i];{{FINDER_CODE}}
 
