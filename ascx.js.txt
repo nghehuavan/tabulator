@@ -83,7 +83,6 @@
     }
 
     function exportCSV_Tabulator() {
-        var list = [];
         var haveCheck = false;
         var rows = tabu.getRows();
         for (var i = 0; i < rows.length; i++) {
