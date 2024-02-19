@@ -270,8 +270,8 @@
             var itemSplit = item.trim().split(":");
             if (itemSplit.length == 2) {
               styles.push({
-                name: itemSplit[0],
-                value: itemSplit[1],
+                name: itemSplit[0].trim(),
+                value: itemSplit[1].trim(),
               });
             }
           }
