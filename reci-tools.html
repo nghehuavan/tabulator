@@ -285,6 +285,12 @@
       if (controlRunat == "server" && controlTag == "input" && controlType == "hidden") {
         controlTag = "asp__hiddenfield"
       }
+      if (controlRunat == "server" && controlTag == "input" && controlType == "checkbox") {
+        controlTag = "asp__checkbox"
+      }
+      if (controlRunat == "server" && controlTag == "input" && controlType == "radio") {
+        controlTag = "asp__radiobutton"
+      }
 
       var isAspControl = controlTag.startsWith("asp__");
       var isGeneric = !isAspControl;
