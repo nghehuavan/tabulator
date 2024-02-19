@@ -191,11 +191,12 @@
       codeAddDic = "";
       codeFinder = "";
       codeJs = "";
+      var rowId = row.getAttribute("id") ?? row.getAttribute("ID");
       var cells = row.querySelectorAll(":scope > td");
       for (let i = 0; i < cells.length; i++) {
         var cell = cells[i];
         var cellId = cell.getAttribute("id") ?? cell.getAttribute("ID");
-        var cellName = cellId ? cellId : `cell_${i}`;
+        var cellName = cellId ? cellId : rowId ? `${rowId}_cell_${i}` : `cell_${i}`;
         codeDefine += `\n#region ${cellName}`
         codeDefine += `\nvar ${cellName} = new HtmlCellRender();`
         var controls = cell.childNodes;
