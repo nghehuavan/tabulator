@@ -6,7 +6,6 @@ using System.Web.Script.Serialization;
 using Kng.Application;
 using Kng.Projects.Project.Domain;
 using Reci.Render;
-using Web.Render;
 
 namespace Kng.Projects.Project.Presentation.Web.Recm.MXX
 {
