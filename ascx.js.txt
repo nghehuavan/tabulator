@@ -37,7 +37,7 @@
                 tabulatorUtil.restoreValue(JSON.parse(document.getElementById(txtActionData_ClientID).value));
             }
 
-            tabulatorUtil.restoreValueOnSort(tabu);
+            tabulatorUtil.restoreStateOnSort(tabu);
         });
     }
 
