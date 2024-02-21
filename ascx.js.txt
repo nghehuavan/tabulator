@@ -34,8 +34,10 @@
             // flag __call_RestoreTabuValueOnError set by server when have error
             // C#: Page.ClientScript.RegisterStartupScript(this.GetType(), "__call_RestoreTabuValueOnError", "var __call_RestoreTabuValueOnError=true;");
             if (typeof (__call_RestoreTabuValueOnError) != 'undefined') {
-                restoreTabuValueOnError();
+                tabulatorUtil.restoreValue(JSON.parse(document.getElementById(txtActionData_ClientID).value));
             }
+
+            tabulatorUtil.restoreValueOnSort(tabu);
         });
     }
 
@@ -56,25 +58,6 @@
         }
         return gridHeight;
     }
-
-    function restoreTabuValueOnError() {
-        var items = JSON.parse(document.getElementById(txtActionData_ClientID).value);
-        items.forEach(item => {
-            for (const [key, ctrl] of Object.entries(item)) {
-                var targetEle = document.getElementById(key);
-                if (targetEle) {
-                    if (ctrl.checked === true || ctrl.checked === false) {
-                        targetEle.checked = ctrl.checked;
-                    }
-                    else {
-                        targetEle.value = ctrl.value;
-                    }
-                    targetEle.disabled = ctrl.disabled;
-                    targetEle.readOnly = ctrl.readOnly;
-                }
-            }
-        })
-	}
 
     function Check_Tabulator(hid, name, field) {
         var current = hid.value == "true";
